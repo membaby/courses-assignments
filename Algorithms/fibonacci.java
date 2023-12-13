@@ -1,7 +1,7 @@
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-public class Fibonacci {
+public class fibonacci {
 
 	public static BigInteger[][] multiply2x2Matrices(BigInteger[][] a, BigInteger[][] b){
 		BigInteger c00 = a[0][0].multiply(b[0][0]).add(a[0][1].multiply(b[1][0]));
