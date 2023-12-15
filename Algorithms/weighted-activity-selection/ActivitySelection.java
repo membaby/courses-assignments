@@ -3,7 +3,8 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.Arrays;
 import java.util.Comparator;
-
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class ActivitySelection {
     
@@ -20,7 +21,11 @@ public class ActivitySelection {
     }
 
     public static void main(String[] args) {
-        String filePath = "/Users/mac/Documents/Education/Educational-Projects/courses-assignments/Algorithms/weighted-activity-selection/input.txt";
+        if (args.length < 1) {
+            System.out.println("Please provide the input file path as an argument");
+            return;
+        }
+        String filePath = args[0];
         Activity[] activities = getActivities(filePath);
         int n = activities.length;
         Arrays.sort(activities, Comparator.comparingInt(a -> a.end));
@@ -29,35 +34,19 @@ public class ActivitySelection {
         int[] prev = new int[n + 1];
 
         for (int i = 1; i <= n; i++) {
-
-            // Binary Search O(nlogn)
-            // int low = 0, high = i - 1;
-            // while (low <= high) {
-            //     int mid = (low + high) / 2;
-            //     if (activities[mid].end <= activities[i - 1].start) {
-            //         if (activities[mid + 1].end <= activities[i - 1].start) {
-            //             low = mid + 1;
-            //         } else {
-            //             prev[i] = mid;
-            //             break;
-            //         }
-            //     } else {
-            //         high = mid - 1;
-            //     }
-            // }
-            
-            // Without Binary Search O(n^2)
-            int j = i - 1;
-            while (j >= 0 && activities[j].end > activities[i - 1].start) {
-                j--;
-            }
+            int j = binarySearch(activities, i);
             prev[i] = j;
-
-
             dp[i] = Math.max(activities[i - 1].weight + dp[prev[i] + 1], dp[i - 1]);
         }
         
-        System.out.println(dp[n]);
+        String filePathOut = filePath.split("\\.")[0] + ".out";
+        try {
+            FileWriter writer = new FileWriter(filePathOut);
+            writer.write(dp[n] + "\n");
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static Activity[] getActivities(String filePath) {
@@ -80,5 +69,24 @@ public class ActivitySelection {
             e.printStackTrace();
         }
         return activities;
+    }
+
+    private static int binarySearch(Activity[] activities, int index) {
+        int low = 0, high = index - 1;
+        
+        while (low <= high) {
+            int mid = (low + high) / 2;
+
+            if (activities[mid].end <= activities[index - 1].start) {
+                if (activities[mid + 1].end <= activities[index - 1].start) {
+                    low = mid + 1;
+                } else {
+                    return mid;
+                }
+            } else {
+                high = mid - 1;
+            }
+        }
+        return -1;
     }
 }
