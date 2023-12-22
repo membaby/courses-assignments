@@ -21,6 +21,9 @@ public class ActivitySelection {
     }
 
     public static void main(String[] args) {
+        // I acknowledge that I am aware of the academic integrity guidelines of this course, and that I worked on this assignment independently without any unauthorized help
+        // Mamhoud Tarek Mahmoud Embaby - 20011800
+
         if (args.length < 1) {
             System.out.println("Please provide the input file path as an argument");
             return;
@@ -39,7 +42,7 @@ public class ActivitySelection {
             dp[i] = Math.max(activities[i - 1].weight + dp[prev[i] + 1], dp[i - 1]);
         }
         
-        String filePathOut = filePath.split("\\.")[0] + ".out";
+        String filePathOut = filePath.split("\\.")[0] + "_20011800.out";
         try {
             FileWriter writer = new FileWriter(filePathOut);
             writer.write(dp[n] + "\n");
